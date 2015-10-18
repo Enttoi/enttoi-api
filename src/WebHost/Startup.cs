@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Autofac.Core;
 using Autofac.Integration.SignalR;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using WebHost.Logger;
+using WebHost.Services;
 
 [assembly: OwinStartup(typeof(WebHost.Startup))]
 namespace WebHost
@@ -41,6 +43,15 @@ namespace WebHost
                 .RegisterType<TraceLogger>()
                 .As<ILogger>()
                 .SingleInstance();
+
+            builder
+                .RegisterType<AzureDocumentDb>()
+                .As<IDocumentsService>()
+                .SingleInstance()
+                .WithParameters(new Parameter[] {
+                    new PositionalParameter(0 , Environment.GetEnvironmentVariable("DOCUMENT_DB_ENDPOINT")),
+                    new PositionalParameter(1, Environment.GetEnvironmentVariable("DOCUMENT_DB_ACCESS_KEY")),
+                    new PositionalParameter(2, Environment.GetEnvironmentVariable("DOCUMENT_DB_NAME") ?? "development")});
 
             var container = builder.Build();
 
