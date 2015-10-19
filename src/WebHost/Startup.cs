@@ -57,9 +57,7 @@ namespace WebHost
                 .RegisterType<StorageService>()
                 .As<IStorageService>()
                 .SingleInstance()
-                .WithParameters(new Parameter[] {
-                    new PositionalParameter(0 , Environment.GetEnvironmentVariable("STORAGE_ACCOUNT") ?? "UseDevelopmentStorage=true"),
-                    new PositionalParameter(1, Environment.GetEnvironmentVariable("STORAGE_ACCESS_KEY"))});
+                .WithParameter("connectionString", Environment.GetEnvironmentVariable("STORAGE_CONNECTION_STRING") ?? "UseDevelopmentStorage=true");
 
             var container = builder.Build();
 
