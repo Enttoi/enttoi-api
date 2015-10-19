@@ -8,10 +8,15 @@ using WebHost.Models;
 
 namespace WebHost.Services
 {
-    public class AzureDocumentDb : IDocumentsService
+    /// <summary>
+    /// Thread safe type to perform operations against Azure's DocumentDB service.
+    /// </summary>
+    public class AzureDocumentDb : IDocumentsService, IDisposable
     {
         private const string COLLECTION_CLIENTS = "clients";
 
+        // from here: https://msdn.microsoft.com/library/azure/microsoft.azure.documents.client.documentclient.aspx
+        // this type is thread safe
         private readonly DocumentClient _client;
         private readonly string _dbName;
         private readonly Uri _clientCollectionLink;
@@ -24,6 +29,8 @@ namespace WebHost.Services
             if (String.IsNullOrEmpty(dbName)) throw new ArgumentNullException(nameof(dbName));
 
             _client = new DocumentClient(new Uri(endPoint), accessKey);
+            // TODO: to warm-up it worth calling 
+            // await _client.OpenAsync()
             _clientCollectionLink = new Uri($"dbs/{dbName}/colls/{COLLECTION_CLIENTS}");
         }
 
@@ -37,6 +44,12 @@ namespace WebHost.Services
             return _client
                 .CreateDocumentQuery<Client>(_clientCollectionLink, _query)
                 .ToList();
+        }
+
+        public void Dispose()
+        {
+            if (_client != null)
+                _client.Dispose();
         }
     }
 }

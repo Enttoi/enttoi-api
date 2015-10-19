@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using WebHost.Logger;
+using WebHost.Services;
 
 namespace WebHost.Hubs
 {
