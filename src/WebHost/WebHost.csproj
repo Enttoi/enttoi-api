@@ -139,9 +139,12 @@
     <Compile Include="Logger\TraceLogger.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\Sensor.cs" />
+    <Compile Include="Models\SensorState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AzureDocumentDb.cs" />
     <Compile Include="Services\IDocumentsService.cs" />
+    <Compile Include="Services\IStorageService.cs" />
+    <Compile Include="Services\StorageService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <PropertyGroup>

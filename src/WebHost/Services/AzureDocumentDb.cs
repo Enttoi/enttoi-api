@@ -17,13 +17,13 @@ namespace WebHost.Services
         private readonly Uri _clientCollectionLink;
 
 
-        public AzureDocumentDb(string endPoint, string token, string dbName)
+        public AzureDocumentDb(string endPoint, string accessKey, string dbName)
         {
             if (String.IsNullOrEmpty(endPoint)) throw new ArgumentNullException(nameof(endPoint));
-            if (String.IsNullOrEmpty(token)) throw new ArgumentNullException(nameof(token));
+            if (String.IsNullOrEmpty(accessKey)) throw new ArgumentNullException(nameof(accessKey));
             if (String.IsNullOrEmpty(dbName)) throw new ArgumentNullException(nameof(dbName));
 
-            _client = new DocumentClient(new Uri(endPoint), token);
+            _client = new DocumentClient(new Uri(endPoint), accessKey);
             _clientCollectionLink = new Uri($"dbs/{dbName}/colls/{COLLECTION_CLIENTS}");
         }
 

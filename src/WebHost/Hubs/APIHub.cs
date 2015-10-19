@@ -13,6 +13,7 @@ namespace WebHost.Hubs
     {
         private readonly ILifetimeScope _hubLifetimeScope;
         private readonly ILogger _logger;
+        private readonly IDocumentsService _documents;
 
         public APIHub(ILifetimeScope lifetimeScope)
         {
@@ -21,21 +22,7 @@ namespace WebHost.Hubs
 
             // Resolve dependencies from the hub lifetime scope
             _logger = _hubLifetimeScope.Resolve<ILogger>();
-        }
-
-        public override Task OnConnected()
-        {
-            return base.OnConnected();
-        }
-
-        public override Task OnReconnected()
-        {
-            return base.OnReconnected();
-        }
-
-        public override Task OnDisconnected(bool stopCalled)
-        {
-            return base.OnDisconnected(stopCalled);
+            _documents = _hubLifetimeScope.Resolve<IDocumentsService>();
         }
 
         protected override void Dispose(bool disposing)

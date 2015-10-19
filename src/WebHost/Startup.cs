@@ -53,6 +53,14 @@ namespace WebHost
                     new PositionalParameter(1, Environment.GetEnvironmentVariable("DOCUMENT_DB_ACCESS_KEY")),
                     new PositionalParameter(2, Environment.GetEnvironmentVariable("DOCUMENT_DB_NAME") ?? "development")});
 
+            builder
+                .RegisterType<StorageService>()
+                .As<IStorageService>()
+                .SingleInstance()
+                .WithParameters(new Parameter[] {
+                    new PositionalParameter(0 , Environment.GetEnvironmentVariable("STORAGE_ACCOUNT") ?? "UseDevelopmentStorage=true"),
+                    new PositionalParameter(1, Environment.GetEnvironmentVariable("STORAGE_ACCESS_KEY"))});
+
             var container = builder.Build();
 
             // OWIN related registrations

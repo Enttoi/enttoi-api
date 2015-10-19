@@ -11,6 +11,6 @@ namespace WebHost.Models
 
         public string SensorType { get; set; }
 
-        public int State { get; set; }
+        public SensorState State { get; set; }
     }
 }
