@@ -1,0 +1,22 @@
+{
+  "id": "871ebd05-5ef9-4be3-ad9d-6efb4f74678e",
+  "isDisabled": false,
+  "token": "53508c12-cab4-42ce-b93b-9cc2b9eba43b",
+  "isOnline": false,
+  "isOnlineChanged": "2015-10-20T20:41:47.754Z",
+  "tags": [
+    "left",
+    "men",
+    "floor-3"
+  ],
+  "sensors": [
+    {
+      "sensorType": "cabin_door",
+      "sensorId": 1
+    },
+    {
+      "sensorType": "cabin_door",
+      "sensorId": 2
+    }
+  ]
+}

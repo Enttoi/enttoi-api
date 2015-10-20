@@ -26,6 +26,13 @@ namespace WebHost.Hubs
             _documents = _hubLifetimeScope.Resolve<IDocumentsService>();
         }
 
+        //public async Task OnDashboardSubscribed()
+        //{
+        //    var clients = _documents.GetClients();
+        //    var stutuses = _se
+
+        //}
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && _hubLifetimeScope != null)

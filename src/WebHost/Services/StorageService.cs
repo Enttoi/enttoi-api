@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using WebHost.Logger;
 using WebHost.Models;
 
 namespace WebHost.Services
@@ -18,7 +19,7 @@ namespace WebHost.Services
 
         private readonly CloudStorageAccount _account;
 
-        public StorageService(string connectionString)
+        public StorageService(string connectionString, ILogger logger)
         {
             if (String.IsNullOrEmpty(connectionString)) throw new ArgumentNullException(nameof(connectionString));
             _account = CloudStorageAccount.Parse(connectionString);

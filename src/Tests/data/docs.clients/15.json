@@ -1,0 +1,26 @@
+{
+  "id": "8458dfcc-3565-4a1e-bda2-b21ff30b2918",
+  "isDisabled": false,
+  "token": "2f41c4e0-6d09-41a6-90a3-7dda86c22cc0",
+  "isOnline": false,
+  "isOnlineChanged": "2015-10-20T20:41:47.754Z",
+  "tags": [
+    "right",
+    "women",
+    "floor-4"
+  ],
+  "sensors": [
+    {
+      "sensorType": "cabin_door",
+      "sensorId": 1
+    },
+    {
+      "sensorType": "cabin_door",
+      "sensorId": 2
+    },
+    {
+      "sensorType": "cabin_door",
+      "sensorId": 3
+    }
+  ]
+}
