@@ -1,4 +1,5 @@
 ﻿using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.RetryPolicies;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ namespace WebHost.Services
     public class StorageService : IStorageService
     {
         private const string TABLE_SENSORS_STATE = "SensorsState";
+        private const int RETRY_COUNT = 3;
+        private readonly TimeSpan RETRY_INTERVAL = TimeSpan.FromMilliseconds(500);
 
         private readonly CloudStorageAccount _account;
 
@@ -31,19 +34,45 @@ namespace WebHost.Services
             if (clients == null) throw new ArgumentNullException(nameof(clients));
             if (clients.Count == 0) throw new ArgumentException(nameof(clients));
 
-            var operations = new TableBatchOperation();
+            var operationsTasks = new List<Task<TableResult>>();
+            var tableRef = getTableReference(TABLE_SENSORS_STATE);
+
             foreach (var client in clients)
             {
                 foreach (var sensor in client.Sensors)
                 {
-                    operations.Add(TableOperation.Retrieve(client.ClientId.ToString(), $"{sensor.SensorType}_{sensor.SensorId}"));
+                    operationsTasks.Add(tableRef.ExecuteAsync(TableOperation.Retrieve(
+                        client.ClientId.ToString(), $"{sensor.SensorType}_{sensor.SensorId}")));
                 }
             }
-            var tableRef = _account.CreateCloudTableClient().GetTableReference(TABLE_SENSORS_STATE);
-            var result = await tableRef.ExecuteBatchAsync(operations);
 
-            // TODO: continue
-            throw new NotImplementedException();
+            var result = await Task.WhenAll(operationsTasks);
+
+            return result
+                .Where(r => r.HttpStatusCode == 200)
+                .Select(r => (DynamicTableEntity)r.Result)
+                .Select(r => new SensorState
+                {
+                    ClientId = Guid.Parse(r.PartitionKey),
+                    SensorId = r["SensorId"].Int32Value.Value,
+                    SensorType = r["SensorType"].StringValue,
+                    State = r["State"].Int32Value.Value,
+                    StateUpdatedOn = r["TimeStamp"].DateTime.Value
+                }).
+                ToList();
+        }
+
+
+        private CloudTable getTableReference(string tableName)
+        {
+            var client = _account.CreateCloudTableClient();
+            client.DefaultRequestOptions = new TableRequestOptions()
+            {
+                RetryPolicy = new LinearRetry(RETRY_INTERVAL, RETRY_COUNT),
+                LocationMode = LocationMode.PrimaryThenSecondary
+            };
+
+            return client.GetTableReference(tableName);
         }
     }
 }
