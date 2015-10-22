@@ -14,7 +14,6 @@ namespace WebHost.Hubs
     {
         private readonly ILifetimeScope _hubLifetimeScope;
         private readonly ILogger _logger;
-        private readonly IDocumentsService _documents;
 
         public APIHub(ILifetimeScope lifetimeScope)
         {
@@ -23,7 +22,6 @@ namespace WebHost.Hubs
 
             // Resolve dependencies from the hub lifetime scope
             _logger = _hubLifetimeScope.Resolve<ILogger>();
-            _documents = _hubLifetimeScope.Resolve<IDocumentsService>();
         }
 
         //public async Task OnDashboardSubscribed()

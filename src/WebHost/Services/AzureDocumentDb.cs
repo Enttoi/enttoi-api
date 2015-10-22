@@ -24,15 +24,20 @@ namespace WebHost.Services
         private readonly IReliableReadWriteDocumentClient _client;
         private readonly Uri _clientCollectionLink;
 
+        private readonly ILogger _logger;
+
 
         public AzureDocumentDb(string endPoint, string accessKey, string dbName, ILogger logger)
         {
             if (String.IsNullOrEmpty(endPoint)) throw new ArgumentNullException(nameof(endPoint));
             if (String.IsNullOrEmpty(accessKey)) throw new ArgumentNullException(nameof(accessKey));
             if (String.IsNullOrEmpty(dbName)) throw new ArgumentNullException(nameof(dbName));
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
 
             _client = new DocumentClient(new Uri(endPoint), accessKey)
                 .AsReliable(new FixedInterval(RETRY_COUNT, RETRY_INTERVAL));
+
+            _logger = logger;
             
             // TODO: to warm-up it worth calling 
             // await _client.OpenAsync()

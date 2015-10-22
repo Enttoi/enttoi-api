@@ -21,10 +21,14 @@ namespace WebHost.Services
         private readonly TimeSpan RETRY_INTERVAL = TimeSpan.FromMilliseconds(500);
 
         private readonly CloudStorageAccount _account;
+        private readonly ILogger _logger;
 
         public StorageService(string connectionString, ILogger logger)
         {
             if (String.IsNullOrEmpty(connectionString)) throw new ArgumentNullException(nameof(connectionString));
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
+
+            _logger = logger;
             _account = CloudStorageAccount.Parse(connectionString);
         }
 
