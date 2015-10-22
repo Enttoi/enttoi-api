@@ -59,6 +59,12 @@ namespace WebHost
                 .SingleInstance()
                 .WithParameter("connectionString", Environment.GetEnvironmentVariable("STORAGE_CONNECTION_STRING") ?? "UseDevelopmentStorage=true");
 
+            builder
+                .RegisterType<AzureServiceBusSubscriptionService>()
+                .As<ISubscriptionService>()
+                .SingleInstance()
+                .WithParameter("connectionString", Environment.GetEnvironmentVariable("SERVICEBUS_CONNECTION_STRING"));
+
             var container = builder.Build();
 
             // OWIN related registrations
