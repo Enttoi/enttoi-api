@@ -7,7 +7,7 @@ using WebHost.Models;
 
 namespace WebHost.Services
 {
-    public interface IStorageService
+    public interface ITableService
     {
         /// <summary>
         /// Gets the state of all sensors for specified clients.

@@ -171,8 +171,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AzureDocumentDb.cs" />
     <Compile Include="Services\IDocumentsService.cs" />
-    <Compile Include="Services\IStorageService.cs" />
-    <Compile Include="Services\StorageService.cs" />
+    <Compile Include="Services\ITableService.cs" />
+    <Compile Include="Services\AzureTableStorageService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <PropertyGroup>

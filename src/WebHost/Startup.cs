@@ -54,8 +54,8 @@ namespace WebHost
                     new PositionalParameter(2, Environment.GetEnvironmentVariable("DOCUMENT_DB_NAME") ?? "development")});
 
             builder
-                .RegisterType<StorageService>()
-                .As<IStorageService>()
+                .RegisterType<AzureTableStorageService>()
+                .As<ITableService>()
                 .SingleInstance()
                 .WithParameter("connectionString", Environment.GetEnvironmentVariable("STORAGE_CONNECTION_STRING") ?? "UseDevelopmentStorage=true");
 

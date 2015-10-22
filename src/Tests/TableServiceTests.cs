@@ -11,7 +11,7 @@ using WebHost.Services;
 namespace Tests
 {
     [TestClass]
-    public class StorageServiceTests
+    public class TableServiceTests
     {
         IContainer _container;
 
@@ -26,8 +26,8 @@ namespace Tests
                 .SingleInstance();
 
             builder
-                .RegisterType<StorageService>()
-                .As<IStorageService>()
+                .RegisterType<AzureTableStorageService>()
+                .As<ITableService>()
                 .SingleInstance()
                 .WithParameter("connectionString", "UseDevelopmentStorage=true");
 
@@ -38,7 +38,7 @@ namespace Tests
         public async Task GetStatusesTest()
         {
             // arrange
-            var service = _container.Resolve<IStorageService>();
+            var service = _container.Resolve<ITableService>();
             var clients = new List<Client>() {
                 new Client {
                     ClientId = Guid.Parse("e376cf38-3e4e-41da-839a-95a5a03d6d10"),

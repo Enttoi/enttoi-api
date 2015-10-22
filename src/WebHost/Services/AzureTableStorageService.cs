@@ -14,7 +14,7 @@ namespace WebHost.Services
     /// <summary>
     /// Thread safe type to perform operations against Azure's storage service.
     /// </summary>
-    public class StorageService : IStorageService
+    public class AzureTableStorageService : ITableService
     {
         private const string TABLE_SENSORS_STATE = "SensorsState";
         private const int RETRY_COUNT = 3;
@@ -23,7 +23,7 @@ namespace WebHost.Services
         private readonly CloudStorageAccount _account;
         private readonly ILogger _logger;
 
-        public StorageService(string connectionString, ILogger logger)
+        public AzureTableStorageService(string connectionString, ILogger logger)
         {
             if (String.IsNullOrEmpty(connectionString)) throw new ArgumentNullException(nameof(connectionString));
             if (logger == null) throw new ArgumentNullException(nameof(logger));
