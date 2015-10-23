@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 using System.Web;
 using WebHost.Logger;
 using WebHost.Services;
+using WebHost.Models;
 
 namespace WebHost.Hubs
 {
-    public class APIHub : Hub
+    public class CommonHub : Hub, IClientsNotifier
     {
         private readonly ILifetimeScope _hubLifetimeScope;
         private readonly ILogger _logger;
 
-        public APIHub(ILifetimeScope lifetimeScope)
+        public CommonHub(ILifetimeScope lifetimeScope)
         {
             // Create a lifetime scope for the hub.
             _hubLifetimeScope = lifetimeScope.BeginLifetimeScope();
@@ -24,12 +25,10 @@ namespace WebHost.Hubs
             _logger = _hubLifetimeScope.Resolve<ILogger>();
         }
 
-        //public async Task OnDashboardSubscribed()
-        //{
-        //    var clients = _documents.GetClients();
-        //    var stutuses = _se
-
-        //}
+        public Task SensorStateUpdate(Sensor sensor)
+        {
+            throw new NotImplementedException();
+        }
 
         protected override void Dispose(bool disposing)
         {

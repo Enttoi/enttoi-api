@@ -1,14 +1,14 @@
 ﻿using Autofac;
 using Autofac.Core;
 using Autofac.Integration.SignalR;
+using Autofac.Integration.WebApi;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
 using Owin;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Web;
+using System.Web.Http;
+using WebHost.Hubs;
 using WebHost.Logger;
 using WebHost.Services;
 
@@ -19,24 +19,37 @@ namespace WebHost
     {
         public void Configuration(IAppBuilder app)
         {
+            var httpConfigurations = new HttpConfiguration();
+
             // container
-            var container = configureIoC(app);
+            var container = configureIoC(app, httpConfigurations);
 
             // SignalR routes
             app.MapSignalR("/signalr", new HubConfiguration
             {
                 EnableJavaScriptProxies = false,
+                EnableDetailedErrors = false,
                 Resolver = new AutofacDependencyResolver(container)
             });
+
+            // enable web api
+            httpConfigurations.MapHttpAttributeRoutes();
+            app.UseWebApi(httpConfigurations);
+
+            // configure notifications from service bus to hub
+            configureSubscriptions(container);
         }
 
-        private IContainer configureIoC(IAppBuilder app)
+        private IContainer configureIoC(IAppBuilder app, HttpConfiguration httpConfigurations)
         {
             var builder = new ContainerBuilder();
             var assembly = Assembly.GetExecutingAssembly();
 
+            // web api controllers
+            builder.RegisterApiControllers(assembly);
+
             // SignalR all hubs
-            builder.RegisterHubs(Assembly.GetExecutingAssembly());
+            builder.RegisterHubs(assembly);
 
             // application related
             builder
@@ -67,10 +80,23 @@ namespace WebHost
 
             var container = builder.Build();
 
-            // OWIN related registrations
+            // resolving in OWIN middleware 
             app.UseAutofacMiddleware(container);
 
+            // web api registration
+            httpConfigurations.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+
             return container;
+        }
+
+        private void configureSubscriptions(IContainer container)
+        {
+            var service = container.Resolve<ISubscriptionService>();
+            var notifier = container.Resolve<CommonHub>();
+
+            service.OnSensorStateChangedAsync(async (state) => {
+                await notifier.SensorStateUpdate(state);
+            });
         }
     }
 }
