@@ -1,10 +1,12 @@
 ﻿using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using WebHost.Logger;
+using WebHost.Models;
 
 namespace WebHost.Services
 {
@@ -41,24 +43,24 @@ namespace WebHost.Services
                 TOPIC_SENSORS_STATE, SUBSCRIPTION_NAME, ReceiveMode.ReceiveAndDelete);
         }
 
-        public void OnMessages(Action<string> callback)
+        public void OnSensorStateChanged(Action<SensorStateChanges> callback)
         {
             _client.OnMessage((message) =>
             {
                 using (var stream = new StreamReader(message.GetBody<Stream>(), Encoding.UTF8))
                 {
-                    callback(stream.ReadToEnd());
-                }     
+                    callback(JsonConvert.DeserializeObject<SensorStateChanges>(stream.ReadToEnd()));
+                }
             }, _messageOptions);
         }
 
-        public void OnMessagesAsync(Func<string, Task> callback)
+        public void OnSensorStateChangedAsync(Func<SensorStateChanges, Task> callback)
         {
-            _client.OnMessageAsync(async (message) => 
+            _client.OnMessageAsync(async (message) =>
             {
                 using (var stream = new StreamReader(message.GetBody<Stream>(), Encoding.UTF8))
                 {
-                    await callback(await stream.ReadToEndAsync());
+                    await callback(JsonConvert.DeserializeObject<SensorStateChanges>(await stream.ReadToEndAsync()));
                 }
             }, _messageOptions);
         }
