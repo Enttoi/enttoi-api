@@ -1,9 +1,9 @@
 ﻿using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 using WebHost.Logger;
 
 namespace WebHost.Services
@@ -16,7 +16,8 @@ namespace WebHost.Services
         private const int RETRY_COUNT = 3;
         private readonly TimeSpan RETRY_INTERVAL = TimeSpan.FromMilliseconds(500);
 
-        SubscriptionClient _client;
+        private SubscriptionClient _client;
+        private readonly OnMessageOptions _messageOptions;
         private readonly ILogger _logger;
 
         public AzureServiceBusSubscriptionService(string connectionString, ILogger logger)
@@ -25,26 +26,41 @@ namespace WebHost.Services
             if (logger == null) throw new ArgumentNullException(nameof(logger));
 
             _logger = logger;
-            
+
             var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
             if (!namespaceManager.SubscriptionExists(TOPIC_SENSORS_STATE, SUBSCRIPTION_NAME))
                 namespaceManager.CreateSubscription(TOPIC_SENSORS_STATE, SUBSCRIPTION_NAME);
 
-            _client = SubscriptionClient.CreateFromConnectionString(connectionString, 
-                TOPIC_SENSORS_STATE, SUBSCRIPTION_NAME, ReceiveMode.ReceiveAndDelete);            
-        }
-
-        public void OnMessages(Action<string> callback)
-        {
-            var options = new OnMessageOptions()
+            _messageOptions = new OnMessageOptions()
             {
                 AutoComplete = false,
                 AutoRenewTimeout = TimeSpan.FromMinutes(1)
             };
 
-            _client.OnMessage((message) => {
-                callback(message.GetBody<string>());                
-            }, options);
+            _client = SubscriptionClient.CreateFromConnectionString(connectionString,
+                TOPIC_SENSORS_STATE, SUBSCRIPTION_NAME, ReceiveMode.ReceiveAndDelete);
+        }
+
+        public void OnMessages(Action<string> callback)
+        {
+            _client.OnMessage((message) =>
+            {
+                using (var stream = new StreamReader(message.GetBody<Stream>(), Encoding.UTF8))
+                {
+                    callback(stream.ReadToEnd());
+                }     
+            }, _messageOptions);
+        }
+
+        public void OnMessagesAsync(Func<string, Task> callback)
+        {
+            _client.OnMessageAsync(async (message) => 
+            {
+                using (var stream = new StreamReader(message.GetBody<Stream>(), Encoding.UTF8))
+                {
+                    await callback(await stream.ReadToEndAsync());
+                }
+            }, _messageOptions);
         }
 
         public void Dispose()
