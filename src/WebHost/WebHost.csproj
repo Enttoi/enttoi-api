@@ -199,11 +199,11 @@
   <ItemGroup>
     <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Hubs\CommonHub.cs" />
-    <Compile Include="Hubs\IClientsNotifier.cs" />
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\TraceLogger.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Models\Sensor.cs" />
+    <Compile Include="Models\SensorClientUpdate.cs" />
     <Compile Include="Models\SensorStatePersisted.cs" />
     <Compile Include="Models\SensorStateMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
