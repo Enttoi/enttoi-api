@@ -26,7 +26,7 @@ namespace WebHost.Hubs
 
             // Resolve dependencies from the hub lifetime scope
             _logger = _hubLifetimeScope.Resolve<ILogger>(); // singleton
-            _tableService = _hubLifetimeScope.Resolve<ITableService>(); // singleton
+            _documentService = _hubLifetimeScope.Resolve<IDocumentsService>(); // singleton
             _tableService = _hubLifetimeScope.Resolve<ITableService>(); // singleton
         }
 
