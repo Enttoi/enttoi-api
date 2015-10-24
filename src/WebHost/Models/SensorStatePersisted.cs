@@ -12,6 +12,5 @@ namespace WebHost.Models
         public int State { get; set; }
 
         public DateTime StateUpdatedOn { get; set; }
-        public override string ToString() => $"{ClientId}_{SensorType}_{SensorId}";
     }
 }

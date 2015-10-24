@@ -15,7 +15,6 @@ namespace WebHost.Hubs
     public class CommonHub : Hub
     {
         private readonly ILifetimeScope _hubLifetimeScope;
-        private readonly ILogger _logger;
         private readonly ITableService _tableService;
         private readonly IDocumentsService _documentService;
 
@@ -25,63 +24,24 @@ namespace WebHost.Hubs
             _hubLifetimeScope = lifetimeScope.BeginLifetimeScope();
 
             // Resolve dependencies from the hub lifetime scope
-            _logger = _hubLifetimeScope.Resolve<ILogger>(); // singleton
             _documentService = _hubLifetimeScope.Resolve<IDocumentsService>(); // singleton
             _tableService = _hubLifetimeScope.Resolve<ITableService>(); // singleton
         }
 
-        public async Task RequestSensorsState()
+        public async Task RequestInitalState()
         {
             var onlineClients = _documentService.GetClients(true);
             var states = await _tableService.GetSensorsStateAsync(onlineClients);
 
             await Task.WhenAll(
-                states.Select(state => this.SensorStateUpdate(state)));
-        }
-
-        // TODO: move the method outside of HUB
-        internal async Task SensorStateUpdate(Sensor sensor)
-        {
-            if (sensor is SensorStateMessage)
-            {
-                var sensorMessage = sensor as SensorStateMessage;
-
-                // update sent from Gateway => all clients needs to be notified
-
-                // resolution of ~20ms
-                // TODO: Interlocked.Exchange(ref SOME_VARIABLE_TOSTORE_LATEST_TICK, sensorMessage.Timestamp.Ticks);
-
-                await Clients.All.SensorStateUpdate(new SensorClientUpdate
+                states.Select(async state => await Clients.Client(Context.ConnectionId).SensorStatePush(new SensorClientUpdate
                 {
-                    ClientId = sensorMessage.ClientId,
-                    SensorId = sensorMessage.SensorId,
-                    SensorType = sensorMessage.SensorType,
-                    NewState = sensorMessage.NewState
-                });
-            }
-            else if (sensor is SensorStatePersisted)
-            {
-                // specific client requested current state
-                var sensorState = sensor as SensorStatePersisted;
-
-                // check that no newer notifications were sent
-                // TODO: if(Interlocked.CompareExchange(ref SOME_VARIABLE_TOSTORE_LATEST_TICK, sensorState.StateUpdatedOn.Ticks) != sensorState.StateUpdatedOn.Ticks)
-                //{
-                // skip sending state as it was already send by update
-                //}
-                //else
-                {
-                    await Clients.Client(Context.ConnectionId).SensorStateUpdate(new SensorClientUpdate
-                    {
-                        ClientId = sensorState.ClientId,
-                        SensorId = sensorState.SensorId,
-                        SensorType = sensorState.SensorType,
-                        NewState = sensorState.State
-                    });
-                }
-            }
-            else
-                throw new InvalidOperationException();
+                    ClientId = state.ClientId,
+                    SensorId = state.SensorId,
+                    SensorType = state.SensorType,
+                    NewState = state.State,
+                    Timestamp = state.StateUpdatedOn
+                })));
         }
 
         protected override void Dispose(bool disposing)

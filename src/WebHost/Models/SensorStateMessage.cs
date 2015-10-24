@@ -16,7 +16,5 @@ namespace WebHost.Models
         public long PreviousStateDurationMs { get; set; }
 
         public DateTime Timestamp { get; set; }
-
-        public override string ToString() => $"{ClientId}_{SensorType}_{SensorId}";
     }
 }

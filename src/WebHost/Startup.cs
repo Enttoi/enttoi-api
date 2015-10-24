@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Web.Http;
 using WebHost.Hubs;
 using WebHost.Logger;
+using WebHost.Models;
 using WebHost.Services;
 
 [assembly: OwinStartup(typeof(WebHost.Startup))]
@@ -83,7 +84,7 @@ namespace WebHost
                 .As<ISubscriptionService>()
                 .SingleInstance()
                 .WithParameter("connectionString", Environment.GetEnvironmentVariable("SERVICEBUS_CONNECTION_STRING"));
-
+            
             var container = builder.Build();
 
             // resolving in OWIN middleware 
@@ -98,10 +99,18 @@ namespace WebHost
         private void configureSubscriptions(IContainer container)
         {
             var service = container.Resolve<ISubscriptionService>();
-            var notifier = container.Resolve<CommonHub>();
+            var publisher = container.Resolve<CommonHub>();
 
-            service.OnSensorStateChangedAsync(async (state) => {
-                await notifier.SensorStateUpdate(state);
+            service.OnSensorStateChangedAsync(async (state) =>
+            {
+                await publisher.Clients.All.SensorStatePush(new SensorClientUpdate
+                {
+                    ClientId = state.ClientId,
+                    SensorId = state.SensorId,
+                    SensorType = state.SensorType,
+                    NewState = state.NewState,
+                    Timestamp = state.Timestamp
+                });
             });
         }
     }

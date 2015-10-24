@@ -10,5 +10,9 @@ namespace WebHost.Models
         public Guid ClientId { get; set; }
 
         public int NewState { get; set; }
+
+        public DateTime Timestamp { get; set; }
+
+        public override string ToString() => $"{ClientId}_{SensorType}_{SensorId}";
     }
 }
