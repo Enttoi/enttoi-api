@@ -14,6 +14,6 @@ namespace WebHost.Services
         /// </summary>
         /// <param name="clients">The clients.</param>
         /// <returns></returns>
-        Task<IList<SensorState>> GetSensorsStateAsync(IList<Client> clients);
+        Task<IList<SensorStatePersisted>> GetSensorsStateAsync(IList<Client> clients);
     }
 }

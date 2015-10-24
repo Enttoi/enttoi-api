@@ -33,7 +33,7 @@ namespace WebHost.Services
         }
 
 
-        public async Task<IList<SensorState>> GetSensorsStateAsync(IList<Client> clients)
+        public async Task<IList<SensorStatePersisted>> GetSensorsStateAsync(IList<Client> clients)
         {
             if (clients == null) throw new ArgumentNullException(nameof(clients));
             if (clients.Count == 0) throw new ArgumentException(nameof(clients));
@@ -55,7 +55,7 @@ namespace WebHost.Services
             return result
                 .Where(r => r.HttpStatusCode == 200)
                 .Select(r => (DynamicTableEntity)r.Result)
-                .Select(r => new SensorState
+                .Select(r => new SensorStatePersisted
                 {
                     ClientId = Guid.Parse(r.PartitionKey),
                     SensorId = r["SensorId"].Int32Value.Value,

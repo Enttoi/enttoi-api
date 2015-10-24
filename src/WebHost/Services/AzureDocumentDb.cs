@@ -44,16 +44,35 @@ namespace WebHost.Services
             _clientCollectionLink = new Uri($"dbs/{dbName}/colls/{COLLECTION_CLIENTS}", UriKind.Relative);
         }
 
-        public IList<Client> GetClients()
+        public IList<Client> GetClients(bool onlineOnly = false)
         {
             var _query = new SqlQuerySpec()
             {
-                QueryText = "SELECT * FROM c WHERE c.isDisabled = false"
+                QueryText = String.Format(
+                    "SELECT * FROM c WHERE c.isDisabled = false{0}", onlineOnly ? " AND c.isOnline = true" : null)
             };
             
             return _client
                 .CreateDocumentQuery<Client>(_clientCollectionLink, _query)
                 .ToList();
+        }
+
+        public Client GetClient(Guid clientId)
+        {
+            if (clientId == Guid.Empty) throw new ArgumentOutOfRangeException(nameof(clientId));
+
+            var _query = new SqlQuerySpec()
+            {
+                QueryText = "SELECT * FROM c WHERE c.isDisabled = false AND c.id = @clientId",
+                Parameters = new SqlParameterCollection {
+                    new SqlParameter("@clientId", clientId)
+                }
+            };
+
+            return _client
+                .CreateDocumentQuery<Client>(_clientCollectionLink, _query)
+                .ToList()
+                .SingleOrDefault();
         }
 
         public void Dispose()

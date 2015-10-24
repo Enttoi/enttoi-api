@@ -41,7 +41,7 @@ namespace Tests
             var service = _container.Resolve<ISubscriptionService>();
 
             // act
-            var messages = new List<SensorStateChanges>();
+            var messages = new List<SensorStateMessage>();
             service.OnSensorStateChanged((message) =>
             {
                 messages.Add(message);
@@ -60,7 +60,7 @@ namespace Tests
             var service = _container.Resolve<ISubscriptionService>();
 
             // act
-            var messages = new List<SensorStateChanges>();
+            var messages = new List<SensorStateMessage>();
             service.OnSensorStateChangedAsync(async (message) => {
                 await Task.CompletedTask;
                 messages.Add(message);

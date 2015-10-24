@@ -4,6 +4,7 @@ using Autofac.Integration.SignalR;
 using Autofac.Integration.WebApi;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
+using Newtonsoft.Json.Serialization;
 using Owin;
 using System;
 using System.Reflection;
@@ -32,8 +33,13 @@ namespace WebHost
                 Resolver = new AutofacDependencyResolver(container)
             });
 
-            // enable web api
+            // enable web api and configure serialization of JSON
             httpConfigurations.MapHttpAttributeRoutes();
+            httpConfigurations
+                .Formatters
+                .JsonFormatter
+                .SerializerSettings
+                .ContractResolver = new CamelCasePropertyNamesContractResolver();
             app.UseWebApi(httpConfigurations);
 
             // configure notifications from service bus to hub

@@ -9,8 +9,8 @@ namespace WebHost.Services
 {
     public interface ISubscriptionService
     {
-        void OnSensorStateChanged(Action<SensorStateChanges> callback);
+        void OnSensorStateChanged(Action<SensorStateMessage> callback);
 
-        void OnSensorStateChangedAsync(Func<SensorStateChanges, Task> callback);
+        void OnSensorStateChangedAsync(Func<SensorStateMessage, Task> callback);
     }
 }

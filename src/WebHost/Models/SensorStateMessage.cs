@@ -5,10 +5,10 @@ using System.Web;
 
 namespace WebHost.Models
 {
-    public class SensorStateChanges : Sensor
+    public class SensorStateMessage : Sensor
     {
         public Guid ClientId { get; set; }
-        
+
         public int NewState { get; set; }
 
         public int PreviousState { get; set; }
@@ -16,5 +16,7 @@ namespace WebHost.Models
         public long PreviousStateDurationMs { get; set; }
 
         public DateTime Timestamp { get; set; }
+
+        public override string ToString() => $"{ClientId}_{SensorType}_{SensorId}";
     }
 }

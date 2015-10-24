@@ -43,24 +43,24 @@ namespace WebHost.Services
                 TOPIC_SENSORS_STATE, SUBSCRIPTION_NAME, ReceiveMode.ReceiveAndDelete);
         }
 
-        public void OnSensorStateChanged(Action<SensorStateChanges> callback)
+        public void OnSensorStateChanged(Action<SensorStateMessage> callback)
         {
             _client.OnMessage((message) =>
             {
                 using (var stream = new StreamReader(message.GetBody<Stream>(), Encoding.UTF8))
                 {
-                    callback(JsonConvert.DeserializeObject<SensorStateChanges>(stream.ReadToEnd()));
+                    callback(JsonConvert.DeserializeObject<SensorStateMessage>(stream.ReadToEnd()));
                 }
             }, _messageOptions);
         }
 
-        public void OnSensorStateChangedAsync(Func<SensorStateChanges, Task> callback)
+        public void OnSensorStateChangedAsync(Func<SensorStateMessage, Task> callback)
         {
             _client.OnMessageAsync(async (message) =>
             {
                 using (var stream = new StreamReader(message.GetBody<Stream>(), Encoding.UTF8))
                 {
-                    await callback(JsonConvert.DeserializeObject<SensorStateChanges>(await stream.ReadToEndAsync()));
+                    await callback(JsonConvert.DeserializeObject<SensorStateMessage>(await stream.ReadToEndAsync()));
                 }
             }, _messageOptions);
         }

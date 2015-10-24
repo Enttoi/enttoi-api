@@ -8,6 +8,8 @@ namespace WebHost.Services
 {
     public interface IDocumentsService
     {
-        IList<Client> GetClients();
+        IList<Client> GetClients(bool onlineOnly = false);
+
+        Client GetClient(Guid clientId);
     }
 }
