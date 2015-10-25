@@ -28,7 +28,7 @@ namespace WebHost.Hubs
             _tableService = _hubLifetimeScope.Resolve<ITableService>(); // singleton
         }
 
-        public async Task RequestInitalState()
+        public async Task RequestInitialState()
         {
             var onlineClients = _documentService.GetClients(true);
             var states = await _tableService.GetSensorsStateAsync(onlineClients);
