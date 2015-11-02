@@ -1,0 +1,27 @@
+version: 1.0.{build}
+
+install:
+- nuget restore
+
+configuration:
+- Release
+
+build:
+  project: EnttoiAPI.sln
+  publish_wap: true
+  parallel: true
+  verbosity: minimal  
+
+artifacts:
+- path: WebHost\bin\WebHost.zip
+  name: web-deploy-package
+  type: WebDeployPackage
+  
+deploy:
+- provider: Environment
+  name: EnttoiAPI
+  on:
+    branch: master
+
+cache:
+- packages -> **\packages.config
