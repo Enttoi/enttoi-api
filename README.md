@@ -1,6 +1,6 @@
 # Enttoi API for web client
 
-[![Build status](https://ci.appveyor.com/api/projects/status/mi0xgwxrpo7kburj/branch/master?svg=true)](https://ci.appveyor.com/project/jenyayel/webstupidsolution/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/mi0xgwxrpo7kburj/branch/master?svg=true)](https://ci.appveyor.com/project/jenyayel/enttoi-api-dotnet/branch/master)
 
 *This repository is part of [Enttoi](http://enttoi.github.io/) project.*
 
