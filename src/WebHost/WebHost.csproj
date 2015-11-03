@@ -181,6 +181,9 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="404.html" />
+    <Content Include="500.html" />
+    <Content Include="index.html" />
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
