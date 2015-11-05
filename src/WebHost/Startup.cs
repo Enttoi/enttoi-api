@@ -29,7 +29,7 @@ namespace WebHost
             // SignalR routes
             app.MapSignalR("/signalr", new HubConfiguration
             {
-                EnableJavaScriptProxies = false,
+                EnableJavaScriptProxies = true,
                 EnableDetailedErrors = false,
                 Resolver = new AutofacDependencyResolver(container)
             });
