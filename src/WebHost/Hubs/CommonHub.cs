@@ -36,11 +36,11 @@ namespace WebHost.Hubs
             await Task.WhenAll(
                 states.Select(async state => await Clients.Client(Context.ConnectionId).SensorStatePush(new SensorClientUpdate
                 {
-                    ClientId = state.ClientId,
+                    clientId = state.ClientId,
                     SensorId = state.SensorId,
                     SensorType = state.SensorType,
-                    NewState = state.State,
-                    Timestamp = state.StateUpdatedOn
+                    newState = state.State,
+                    timestamp = state.StateUpdatedOn
                 })));
         }
 

@@ -109,11 +109,11 @@ namespace WebHost
             {
                 await publisher.Clients.All.SensorStatePush(new SensorClientUpdate
                 {
-                    ClientId = state.ClientId,
+                    clientId = state.ClientId,
                     SensorId = state.SensorId,
                     SensorType = state.SensorType,
-                    NewState = state.NewState,
-                    Timestamp = state.Timestamp
+                    newState = state.NewState,
+                    timestamp = state.Timestamp
                 });
             });
         }

@@ -7,12 +7,12 @@ namespace WebHost.Models
 {
     public class SensorClientUpdate : Sensor
     {
-        public Guid ClientId { get; set; }
+        public Guid clientId { get; set; }
 
-        public int NewState { get; set; }
+        public int newState { get; set; }
 
-        public DateTime Timestamp { get; set; }
+        public DateTime timestamp { get; set; }
 
-        public override string ToString() => $"{ClientId}_{SensorType}_{SensorId}";
+        public override string ToString() => $"{clientId}_{SensorType}_{SensorId}";
     }
 }
