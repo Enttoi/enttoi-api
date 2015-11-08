@@ -4,6 +4,7 @@ using Autofac.Integration.SignalR;
 using Autofac.Integration.WebApi;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
+using Microsoft.Owin.Cors;
 using Newtonsoft.Json.Serialization;
 using Owin;
 using System;
@@ -27,11 +28,15 @@ namespace WebHost
             var container = configureIoC(app, httpConfigurations);
 
             // SignalR routes
-            app.MapSignalR("/signalr", new HubConfiguration
+            app.Map("/signalr", map =>
             {
-                EnableJavaScriptProxies = true,
-                EnableDetailedErrors = false,
-                Resolver = new AutofacDependencyResolver(container)
+                map.UseCors(CorsOptions.AllowAll);
+                map.RunSignalR(new HubConfiguration
+                {
+                    EnableJavaScriptProxies = true,
+                    EnableDetailedErrors = false,
+                    Resolver = new AutofacDependencyResolver(container)
+                });
             });
 
             // enable web api and configure serialization of JSON
