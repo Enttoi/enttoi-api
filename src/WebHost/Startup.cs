@@ -27,16 +27,15 @@ namespace WebHost
             // container
             var container = configureIoC(app, httpConfigurations);
 
+            // enable CORS for entire application
+            app.UseCors(CorsOptions.AllowAll);
+
             // SignalR routes
-            app.Map("/signalr", map =>
+            app.MapSignalR("/signalr", new HubConfiguration
             {
-                map.UseCors(CorsOptions.AllowAll);
-                map.RunSignalR(new HubConfiguration
-                {
-                    EnableJavaScriptProxies = true,
-                    EnableDetailedErrors = false,
-                    Resolver = new AutofacDependencyResolver(container)
-                });
+                EnableJavaScriptProxies = true,
+                EnableDetailedErrors = false,
+                Resolver = new AutofacDependencyResolver(container)
             });
 
             // enable web api and configure serialization of JSON
