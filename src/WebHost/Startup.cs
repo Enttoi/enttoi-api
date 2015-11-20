@@ -110,8 +110,8 @@ namespace WebHost
                 await publisher.Clients.All.SensorStatePush(new SensorClientUpdate
                 {
                     clientId = state.ClientId,
-                    SensorId = state.SensorId,
-                    SensorType = state.SensorType,
+                    sensorId = state.sensorId,
+                    sensorType = state.sensorType,
                     newState = state.NewState,
                     timestamp = state.Timestamp
                 });

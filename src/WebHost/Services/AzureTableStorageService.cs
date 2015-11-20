@@ -46,7 +46,7 @@ namespace WebHost.Services
                 foreach (var sensor in client.Sensors)
                 {
                     operationsTasks.Add(tableRef.ExecuteAsync(TableOperation.Retrieve(
-                        client.ClientId.ToString(), $"{sensor.SensorType}_{sensor.SensorId}")));
+                        client.ClientId.ToString(), $"{sensor.sensorType}_{sensor.sensorId}")));
                 }
             }
 
@@ -58,8 +58,8 @@ namespace WebHost.Services
                 .Select(r => new SensorStatePersisted
                 {
                     ClientId = Guid.Parse(r.PartitionKey),
-                    SensorId = r["SensorId"].Int32Value.Value,
-                    SensorType = r["SensorType"].StringValue,
+                    sensorId = r["SensorId"].Int32Value.Value,
+                    sensorType = r["SensorType"].StringValue,
                     State = r["State"].Int32Value.Value,
                     StateUpdatedOn = r["TimeStamp"].DateTime.Value
                 }).

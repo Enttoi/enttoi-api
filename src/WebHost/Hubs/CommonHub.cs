@@ -37,8 +37,8 @@ namespace WebHost.Hubs
                 states.Select(async state => await Clients.Client(Context.ConnectionId).SensorStatePush(new SensorClientUpdate
                 {
                     clientId = state.ClientId,
-                    SensorId = state.SensorId,
-                    SensorType = state.SensorType,
+                    sensorId = state.sensorId,
+                    sensorType = state.sensorType,
                     newState = state.State,
                     timestamp = state.StateUpdatedOn
                 })));

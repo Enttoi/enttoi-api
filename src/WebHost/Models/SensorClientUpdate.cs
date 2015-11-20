@@ -13,6 +13,6 @@ namespace WebHost.Models
 
         public DateTime timestamp { get; set; }
 
-        public override string ToString() => $"{clientId}_{SensorType}_{SensorId}";
+        public override string ToString() => $"{clientId}_{sensorType}_{sensorId}";
     }
 }

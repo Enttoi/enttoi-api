@@ -7,8 +7,8 @@ namespace WebHost.Models
 {
     public class Sensor
     {
-        public int SensorId { get; set; }
+        public int sensorId { get; set; }
 
-        public string SensorType { get; set; }
+        public string sensorType { get; set; }
     }
 }

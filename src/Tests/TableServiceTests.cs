@@ -44,24 +44,24 @@ namespace Tests
                     ClientId = Guid.Parse("e376cf38-3e4e-41da-839a-95a5a03d6d10"),
                     Sensors = new Sensor[] {
                         new Sensor {
-                            SensorId = 1,
-                            SensorType = "cabin_door"
+                            sensorId = 1,
+                            sensorType = "cabin_door"
                         },
                         new Sensor {
-                            SensorId = 2,
-                            SensorType = "cabin_door"
+                            sensorId = 2,
+                            sensorType = "cabin_door"
                         }}
                 },
                 new Client {
                     ClientId = Guid.Parse("887f6e3c-5f18-40a3-bb91-de911cdc77df"),
                     Sensors = new Sensor[] {
                         new Sensor {
-                            SensorId = 1,
-                            SensorType = "cabin_door"
+                            sensorId = 1,
+                            sensorType = "cabin_door"
                         },
                         new Sensor {
-                            SensorId = 2,
-                            SensorType = "cabin_door"
+                            sensorId = 2,
+                            sensorType = "cabin_door"
                         }}
                 }
             };
