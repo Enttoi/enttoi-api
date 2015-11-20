@@ -34,7 +34,7 @@ namespace WebHost.Hubs
             var states = await _tableService.GetSensorsStateAsync(onlineClients);
 
             await Task.WhenAll(
-                states.Select(async state => await Clients.Client(Context.ConnectionId).SensorStatePush(new SensorClientUpdate
+                states.Select(async state => await Clients.Client(Context.ConnectionId).sensorStatePush(new SensorClientUpdate
                 {
                     clientId = state.ClientId,
                     sensorId = state.sensorId,

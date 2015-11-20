@@ -88,7 +88,7 @@ namespace WebHost
                 .As<ISubscriptionService>()
                 .SingleInstance()
                 .WithParameter("connectionString", Environment.GetEnvironmentVariable("SERVICEBUS_CONNECTION_STRING"));
-            
+
             var container = builder.Build();
 
             // resolving in OWIN middleware 
@@ -103,18 +103,18 @@ namespace WebHost
         private void configureSubscriptions(IContainer container)
         {
             var service = container.Resolve<ISubscriptionService>();
-            var publisher = container.Resolve<CommonHub>();
-
             service.OnSensorStateChangedAsync(async (state) =>
             {
-                await publisher.Clients.All.SensorStatePush(new SensorClientUpdate
-                {
-                    clientId = state.ClientId,
-                    sensorId = state.sensorId,
-                    sensorType = state.sensorType,
-                    newState = state.NewState,
-                    timestamp = state.Timestamp
-                });
+                await GlobalHost.ConnectionManager
+                    .GetHubContext<CommonHub>()
+                    .Clients.All.sensorStatePush(new SensorClientUpdate
+                    {
+                        clientId = state.ClientId,
+                        sensorId = state.sensorId,
+                        sensorType = state.sensorType,
+                        newState = state.NewState,
+                        timestamp = state.Timestamp
+                    });
             });
         }
     }
