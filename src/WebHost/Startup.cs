@@ -103,9 +103,9 @@ namespace WebHost
         private void configureSubscriptions(IContainer container)
         {
             var service = container.Resolve<ISubscriptionService>();
-            service.OnSensorStateChangedAsync(async (state) =>
+            service.OnSensorStateChanged((state) =>
             {
-                await GlobalHost.ConnectionManager
+                GlobalHost.ConnectionManager
                     .GetHubContext<CommonHub>()
                     .Clients.All.sensorStatePush(new SensorClientUpdate
                     {
