@@ -16,7 +16,7 @@ namespace WebHost.Hubs
     {
         private readonly ILifetimeScope _hubLifetimeScope;
         private readonly ITableService _tableService;
-        private readonly IDocumentsService _documentService;
+        private readonly IDocumentsService _documentService;        
 
         public CommonHub(ILifetimeScope lifetimeScope)
         {

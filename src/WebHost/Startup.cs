@@ -3,6 +3,7 @@ using Autofac.Core;
 using Autofac.Integration.SignalR;
 using Autofac.Integration.WebApi;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using Newtonsoft.Json.Serialization;
@@ -30,13 +31,14 @@ namespace WebHost
             // enable CORS for entire application
             app.UseCors(CorsOptions.AllowAll);
 
-            // SignalR routes
-            app.MapSignalR("/signalr", new HubConfiguration
+            // SignalR 
+            var srConfig = new HubConfiguration
             {
                 EnableJavaScriptProxies = true,
                 EnableDetailedErrors = false,
                 Resolver = new AutofacDependencyResolver(container)
-            });
+            };
+            app.MapSignalR("/signalr", srConfig);
 
             // enable web api and configure serialization of JSON
             httpConfigurations.MapHttpAttributeRoutes();
@@ -48,7 +50,7 @@ namespace WebHost
             app.UseWebApi(httpConfigurations);
 
             // configure notifications from service bus to hub
-            configureSubscriptions(container);
+            configureSubscriptions(container, srConfig.Resolver);
         }
 
         private IContainer configureIoC(IAppBuilder app, HttpConfiguration httpConfigurations)
@@ -100,21 +102,21 @@ namespace WebHost
             return container;
         }
 
-        private void configureSubscriptions(IContainer container)
+        private void configureSubscriptions(IContainer container, IDependencyResolver resolver)
         {
             var service = container.Resolve<ISubscriptionService>();
-            service.OnSensorStateChanged((state) =>
+            var hub = resolver.Resolve<IConnectionManager>().GetHubContext<CommonHub>();
+
+            service.OnSensorStateChangedAsync(async (state) =>
             {
-                GlobalHost.ConnectionManager
-                    .GetHubContext<CommonHub>()
-                    .Clients.All.sensorStatePush(new SensorClientUpdate
-                    {
-                        clientId = state.ClientId,
-                        sensorId = state.sensorId,
-                        sensorType = state.sensorType,
-                        newState = state.NewState,
-                        timestamp = state.Timestamp
-                    });
+                await hub.Clients.All.sensorStatePush(new SensorClientUpdate
+                        {
+                            clientId = state.ClientId,
+                            sensorId = state.sensorId,
+                            sensorType = state.sensorType,
+                            newState = state.NewState,
+                            timestamp = state.Timestamp
+                        });
             });
         }
     }
