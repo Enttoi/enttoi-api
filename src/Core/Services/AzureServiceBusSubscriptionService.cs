@@ -1,14 +1,13 @@
-﻿using Microsoft.ServiceBus;
+﻿using Core.Models;
+using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using WebHost.Logger;
-using WebHost.Models;
 
-namespace WebHost.Services
+namespace Core.Services
 {
     public class AzureServiceBusSubscriptionService : ISubscriptionService, IDisposable
     {

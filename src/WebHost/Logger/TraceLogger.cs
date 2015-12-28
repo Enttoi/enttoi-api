@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Core;
 using System.Diagnostics;
-using System.Linq;
-using System.Web;
 
 namespace WebHost.Logger
 {

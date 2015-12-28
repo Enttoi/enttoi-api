@@ -1,12 +1,12 @@
 ﻿using Autofac;
-using Autofac.Core;
+using Core;
+using Core.Models;
+using Core.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebHost.Logger;
-using WebHost.Models;
-using WebHost.Services;
 
 namespace Tests
 {

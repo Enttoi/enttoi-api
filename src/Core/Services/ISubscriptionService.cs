@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Core.Models;
+using System;
 using System.Threading.Tasks;
-using System.Web;
-using WebHost.Models;
 
-namespace WebHost.Services
+namespace Core.Services
 {
     public interface ISubscriptionService
     {

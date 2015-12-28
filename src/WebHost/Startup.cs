@@ -2,6 +2,8 @@
 using Autofac.Core;
 using Autofac.Integration.SignalR;
 using Autofac.Integration.WebApi;
+using Core;
+using Core.Services;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.Owin;
@@ -14,7 +16,6 @@ using System.Web.Http;
 using WebHost.Hubs;
 using WebHost.Logger;
 using WebHost.Models;
-using WebHost.Services;
 
 [assembly: OwinStartup(typeof(WebHost.Startup))]
 namespace WebHost

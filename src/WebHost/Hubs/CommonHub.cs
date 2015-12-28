@@ -1,14 +1,9 @@
 ﻿using Autofac;
+using Core.Services;
 using Microsoft.AspNet.SignalR;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using WebHost.Logger;
-using WebHost.Services;
 using WebHost.Models;
-using System.Threading;
 
 namespace WebHost.Hubs
 {

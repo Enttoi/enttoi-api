@@ -1,11 +1,8 @@
-﻿using System;
+﻿using Core.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using WebHost.Models;
 
-namespace WebHost.Services
+namespace Core.Services
 {
     public interface ITableService
     {

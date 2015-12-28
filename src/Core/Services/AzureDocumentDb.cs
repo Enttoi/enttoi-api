@@ -1,14 +1,13 @@
-﻿using Microsoft.Azure.Documents;
+﻿using Core.Models;
+using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Client.TransientFaultHandling;
 using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebHost.Logger;
-using WebHost.Models;
 
-namespace WebHost.Services
+namespace Core.Services
 {
     /// <summary>
     /// Thread safe type to perform operations against Azure's DocumentDB service.

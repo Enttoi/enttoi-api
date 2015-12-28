@@ -80,12 +80,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{2797ce62-322f-45b4-a5c1-d220e33d3336}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WebHost\WebHost.csproj">
       <Project>{e8aac3c4-91f4-4f2c-91c4-49106414cfcb}</Project>
       <Name>WebHost</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

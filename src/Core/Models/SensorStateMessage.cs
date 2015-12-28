@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace WebHost.Models
+namespace Core.Models
 {
     public class SensorStateMessage : Sensor
     {

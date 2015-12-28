@@ -1,15 +1,13 @@
-﻿using Microsoft.WindowsAzure.Storage;
+﻿using Core.Models;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.RetryPolicies;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using WebHost.Logger;
-using WebHost.Models;
 
-namespace WebHost.Services
+namespace Core.Services
 {
     /// <summary>
     /// Thread safe type to perform operations against Azure's storage service.
