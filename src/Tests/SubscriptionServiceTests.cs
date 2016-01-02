@@ -35,25 +35,6 @@ namespace Tests
         }
 
         [TestMethod]
-        public async Task OnSensorStateChangedTest()
-        {
-            // arrange
-            var service = _container.Resolve<ISubscriptionService>();
-
-            // act
-            var messages = new List<SensorStateMessage>();
-            service.OnSensorStateChanged((message) =>
-            {
-                messages.Add(message);
-            });
-
-            await Task.Delay(10000000);
-
-            // assert
-            // meantime at least not having exceptions 
-        }
-
-        [TestMethod]
         public async Task OnSensorStateChangedAsyncTest()
         {
             // arrange
