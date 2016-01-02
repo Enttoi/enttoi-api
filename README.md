@@ -21,6 +21,10 @@ This is a server side component for web interface. This is an OWIN based applica
 4. To get initial state and updates of sensors:
   * Connect to SignalR at ```/signalr```
   * Create proxy ```CommonHub```
-  * Subscribe to event ```SensorStatePush```
+  * Subscribe to event ```sensorStatePush```
   * Execute ```RequestInitialState``` method
+
+5. To receive notification on entire client going up or down:
+  * Subscribe to event ```clientStatePush```
+
 

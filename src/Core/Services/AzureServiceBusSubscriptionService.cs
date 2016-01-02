@@ -3,6 +3,7 @@ using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,13 +12,13 @@ namespace Core.Services
 {
     public class AzureServiceBusSubscriptionService : ISubscriptionService, IDisposable
     {
-        private const string TOPIC_SENSORS_STATE = "sensor-state-changed";
-        private const string SUBSCRIPTION_NAME = "AllMessages";
+        private readonly string[] TOPICS = new[] { "sensor-state-changed", "client-state-changed" };
+        private const string SUBSCRIPTION_PREFIX = "AllMessages";
 
         private const int RETRY_COUNT = 3;
         private readonly TimeSpan RETRY_INTERVAL = TimeSpan.FromMilliseconds(500);
 
-        private SubscriptionClient _client;
+        private readonly Dictionary<string, SubscriptionClient> _clients;
         private readonly OnMessageOptions _messageOptions;
         private readonly ILogger _logger;
 
@@ -29,26 +30,48 @@ namespace Core.Services
             _logger = logger;
 
             var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
-            if (!namespaceManager.SubscriptionExists(TOPIC_SENSORS_STATE, SUBSCRIPTION_NAME))
-                namespaceManager.CreateSubscription(TOPIC_SENSORS_STATE, SUBSCRIPTION_NAME);
+            _clients = new Dictionary<string, SubscriptionClient>();
+            foreach (var topic in TOPICS)
+            {
+                if (!namespaceManager.SubscriptionExists(topic, $"{SUBSCRIPTION_PREFIX}_{topic}"))
+                    namespaceManager.CreateSubscription(topic, $"{SUBSCRIPTION_PREFIX}_{topic}");
+
+                _clients.Add(topic, SubscriptionClient.CreateFromConnectionString(
+                    connectionString, 
+                    topic, 
+                    $"{SUBSCRIPTION_PREFIX}_{topic}", 
+                    ReceiveMode.ReceiveAndDelete));
+            }
 
             _messageOptions = new OnMessageOptions()
             {
                 AutoComplete = false,
                 AutoRenewTimeout = TimeSpan.FromMinutes(1)
             };
-
-            _client = SubscriptionClient.CreateFromConnectionString(connectionString,
-                TOPIC_SENSORS_STATE, SUBSCRIPTION_NAME, ReceiveMode.ReceiveAndDelete);
         }
 
         public void OnSensorStateChangedAsync(Func<SensorStateMessage, Task> callback)
         {
-            _client.OnMessageAsync(async (message) =>
+            _clients[TOPICS[0]].OnMessageAsync(async (message) =>
             {
                 using (var stream = new StreamReader(message.GetBody<Stream>(), Encoding.UTF8))
                 {
-                    await callback(JsonConvert.DeserializeObject<SensorStateMessage>(await stream.ReadToEndAsync()));
+                    var _payload = await stream.ReadToEndAsync();
+                    _logger.Log($"Received sensor state {_payload}");
+                    await callback(JsonConvert.DeserializeObject<SensorStateMessage>(_payload));
+                }
+            }, _messageOptions);
+        }
+
+        public void OnClientStateChangedAsync(Func<ClientStateMessage, Task> callback)
+        {
+            _clients[TOPICS[1]].OnMessageAsync(async (message) =>
+            {
+                using (var stream = new StreamReader(message.GetBody<Stream>(), Encoding.UTF8))
+                {
+                    var _payload = await stream.ReadToEndAsync();
+                    _logger.Log($"Received client state {_payload}");
+                    await callback(JsonConvert.DeserializeObject<ClientStateMessage>(_payload));
                 }
             }, _messageOptions);
         }
@@ -60,10 +83,14 @@ namespace Core.Services
 
         protected virtual void Dispose(bool disposing)
         {
-            if (_client == null || _client.IsClosed)
+            if (_clients == null || _clients.Count == 0)
                 return;
 
-            _client.Close();
+            foreach (var client in _clients)
+            {
+                if(!client.Value.IsClosed)
+                    client.Value.Close();
+            }
 
             // Suppress finalization of this disposed instance
             if (disposing)

@@ -7,5 +7,7 @@ namespace Core.Services
     public interface ISubscriptionService
     {
         void OnSensorStateChangedAsync(Func<SensorStateMessage, Task> callback);
+
+        void OnClientStateChangedAsync(Func<ClientStateMessage, Task> callback);
     }
 }

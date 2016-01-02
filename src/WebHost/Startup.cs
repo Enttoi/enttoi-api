@@ -119,6 +119,16 @@ namespace WebHost
                             timestamp = state.Timestamp
                         });
             });
+
+            service.OnClientStateChangedAsync(async (state) =>
+            {
+                await hub.Clients.All.clientStatePush(new ClientUpdate
+                {
+                    clientId = state.ClientId,
+                    newState = state.NewState,
+                    timestamp = state.Timestamp
+                });
+            });
         }
     }
 }
