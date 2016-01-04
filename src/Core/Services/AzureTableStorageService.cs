@@ -34,7 +34,7 @@ namespace Core.Services
         public async Task<IList<SensorStatePersisted>> GetSensorsStateAsync(IList<Client> clients)
         {
             if (clients == null) throw new ArgumentNullException(nameof(clients));
-            if (clients.Count == 0) throw new ArgumentException(nameof(clients));
+            if (clients.Count == 0) return new List<SensorStatePersisted>();
 
             var operationsTasks = new List<Task<TableResult>>();
             var tableRef = getTableReference(TABLE_SENSORS_STATE);
