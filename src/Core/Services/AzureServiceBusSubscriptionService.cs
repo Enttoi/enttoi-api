@@ -33,12 +33,13 @@ namespace Core.Services
             _clients = new Dictionary<string, SubscriptionClient>();
             foreach (var topic in TOPICS)
             {
-                if (!namespaceManager.SubscriptionExists(topic, $"{SUBSCRIPTION_PREFIX}_{topic}_{Environment.MachineName}"))
-                    namespaceManager.CreateSubscription(topic, $"{SUBSCRIPTION_PREFIX}_{topic}_{Environment.MachineName}");
+                var subscriptionName = $"{SUBSCRIPTION_PREFIX}_{topic}_{Environment.MachineName}";
+                if (!namespaceManager.SubscriptionExists(topic, subscriptionName))
+                    namespaceManager.CreateSubscription(topic, subscriptionName);
                 _clients.Add(topic, SubscriptionClient.CreateFromConnectionString(
                     connectionString,
                     topic,
-                    $"{SUBSCRIPTION_PREFIX}_{topic}",
+                    subscriptionName,
                     ReceiveMode.ReceiveAndDelete));
             }
 
