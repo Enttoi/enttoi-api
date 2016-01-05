@@ -35,12 +35,11 @@ namespace Core.Services
             {
                 if (!namespaceManager.SubscriptionExists(topic, $"{SUBSCRIPTION_PREFIX}_{topic}"))
                     namespaceManager.CreateSubscription(topic, $"{SUBSCRIPTION_PREFIX}_{topic}");
-
                 _clients.Add(topic, SubscriptionClient.CreateFromConnectionString(
-                    connectionString, 
-                    topic, 
-                    $"{SUBSCRIPTION_PREFIX}_{topic}", 
-                    ReceiveMode.ReceiveAndDelete));
+                    connectionString,
+                    topic,
+                    $"{SUBSCRIPTION_PREFIX}_{topic}",
+                    ReceiveMode.PeekLock));
             }
 
             _messageOptions = new OnMessageOptions()
@@ -57,7 +56,7 @@ namespace Core.Services
                 using (var stream = new StreamReader(message.GetBody<Stream>(), Encoding.UTF8))
                 {
                     var _payload = await stream.ReadToEndAsync();
-                    _logger.Log($"Received sensor state {_payload}");
+                    _logger.Log($"Received {message.MessageId} sensor state {_payload}");
                     await callback(JsonConvert.DeserializeObject<SensorStateMessage>(_payload));
                 }
             }, _messageOptions);
@@ -70,7 +69,7 @@ namespace Core.Services
                 using (var stream = new StreamReader(message.GetBody<Stream>(), Encoding.UTF8))
                 {
                     var _payload = await stream.ReadToEndAsync();
-                    _logger.Log($"Received client state {_payload}");
+                    _logger.Log($"Received {message.MessageId}  client state {_payload}");
                     await callback(JsonConvert.DeserializeObject<ClientStateMessage>(_payload));
                 }
             }, _messageOptions);
@@ -88,7 +87,7 @@ namespace Core.Services
 
             foreach (var client in _clients)
             {
-                if(!client.Value.IsClosed)
+                if (!client.Value.IsClosed)
                     client.Value.Close();
             }
 
