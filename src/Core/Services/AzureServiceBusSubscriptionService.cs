@@ -18,6 +18,7 @@ namespace Core.Services
         private const int RETRY_COUNT = 3;
         private readonly TimeSpan RETRY_INTERVAL = TimeSpan.FromMilliseconds(500);
 
+        private readonly string _connectionString;
         private readonly Dictionary<string, SubscriptionClient> _clients;
         private readonly OnMessageOptions _messageOptions;
         private readonly ILogger _logger;
@@ -27,17 +28,18 @@ namespace Core.Services
             if (String.IsNullOrEmpty(connectionString)) throw new ArgumentNullException(nameof(connectionString));
             if (logger == null) throw new ArgumentNullException(nameof(logger));
 
+            _connectionString = connectionString;
             _logger = logger;
 
-            var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
+            var namespaceManager = NamespaceManager.CreateFromConnectionString(_connectionString);
             _clients = new Dictionary<string, SubscriptionClient>();
             foreach (var topic in TOPICS)
             {
-                var subscriptionName = $"{SUBSCRIPTION_PREFIX}_{topic}_{Environment.MachineName}";
+                var subscriptionName = getSubscriptionName(topic);
                 if (!namespaceManager.SubscriptionExists(topic, subscriptionName))
                     namespaceManager.CreateSubscription(topic, subscriptionName);
                 _clients.Add(topic, SubscriptionClient.CreateFromConnectionString(
-                    connectionString,
+                    _connectionString,
                     topic,
                     subscriptionName,
                     ReceiveMode.ReceiveAndDelete));
@@ -86,10 +88,16 @@ namespace Core.Services
             if (_clients == null || _clients.Count == 0)
                 return;
 
-            foreach (var client in _clients)
+            var namespaceManager = NamespaceManager.CreateFromConnectionString(_connectionString);
+
+            foreach (var pair in _clients)
             {
-                if (!client.Value.IsClosed)
-                    client.Value.Close();
+                if (!pair.Value.IsClosed)
+                    pair.Value.Close();
+
+                var subscriptionName = getSubscriptionName(pair.Key);
+                if (namespaceManager.SubscriptionExists(pair.Key, subscriptionName))
+                    namespaceManager.DeleteSubscription(pair.Key, subscriptionName);
             }
 
             // Suppress finalization of this disposed instance
@@ -101,5 +109,7 @@ namespace Core.Services
         {
             this.Dispose(false);
         }
+
+        private static string getSubscriptionName(string topicName) => $"{SUBSCRIPTION_PREFIX}_{topicName}_{Environment.MachineName}";
     }
 }
