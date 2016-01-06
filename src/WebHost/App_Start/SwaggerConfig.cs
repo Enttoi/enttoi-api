@@ -15,7 +15,7 @@ namespace WebHost
                 .EnableSwagger(c =>
                     {
                         c.SingleApiVersion("v1", "Enttoi API");
-                        c.IncludeXmlComments($"{AppDomain.CurrentDomain.BaseDirectory}\\bin\\WebHost.XML");
+                        //c.IncludeXmlComments($"{AppDomain.CurrentDomain.BaseDirectory}\\bin\\WebHost.XML");
                     })
                 .EnableSwaggerUi();
         }
