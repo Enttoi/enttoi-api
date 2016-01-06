@@ -35,21 +35,28 @@ namespace Core.Services
         {
             if (clients == null) throw new ArgumentNullException(nameof(clients));
             if (clients.Count == 0) return new List<SensorStatePersisted>();
+            
+            var result = await Task.WhenAll(clients.Select(c => this.GetSensorsStateAsync(c)));
+
+            return result
+                .SelectMany(super => super)
+                .ToList();
+        }
+
+        public async Task<IList<SensorStatePersisted>> GetSensorsStateAsync(Client client)
+        {
+            if (client == null) throw new ArgumentNullException(nameof(client));
 
             var operationsTasks = new List<Task<TableResult>>();
             var tableRef = getTableReference(TABLE_SENSORS_STATE);
 
-            foreach (var client in clients)
+            foreach (var sensor in client.Sensors)
             {
-                foreach (var sensor in client.Sensors)
-                {
-                    operationsTasks.Add(tableRef.ExecuteAsync(TableOperation.Retrieve(
-                        client.ClientId.ToString(), $"{sensor.sensorType}_{sensor.sensorId}")));
-                }
+                operationsTasks.Add(tableRef.ExecuteAsync(TableOperation.Retrieve(
+                    client.ClientId.ToString(), $"{sensor.sensorType}_{sensor.sensorId}")));
             }
 
             var result = await Task.WhenAll(operationsTasks);
-
             return result
                 .Where(r => r.HttpStatusCode == 200)
                 .Select(r => (DynamicTableEntity)r.Result)
@@ -63,7 +70,6 @@ namespace Core.Services
                 }).
                 ToList();
         }
-
 
         private CloudTable getTableReference(string tableName)
         {

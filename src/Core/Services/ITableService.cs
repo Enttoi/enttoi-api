@@ -12,5 +12,11 @@ namespace Core.Services
         /// <param name="clients">The clients.</param>
         /// <returns></returns>
         Task<IList<SensorStatePersisted>> GetSensorsStateAsync(IList<Client> clients);
+
+        /// <summary>
+        /// Gets the state of all sensors for specified client
+        /// <param name="clients">The client.</param>
+        /// <returns></returns>
+        Task<IList<SensorStatePersisted>> GetSensorsStateAsync(Client client);
     }
 }
