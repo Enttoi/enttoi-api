@@ -1,1 +1,270 @@
-﻿It works!
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        if (window.location.hostname != 'localhost' && window.location.protocol != "https:")
+            window.location.protocol = "https";
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enttoi API</title>
+
+    <style>
+        html {
+            font-family: sans-serif;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            -moz-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        .container-fluid {
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        .row {
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+
+        .col-md-12 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        @media (min-width: 992px) {
+            .col-md-12 {
+                float: left;
+                width: 100%;
+            }
+        }
+
+        .container-fluid:before, .container-fluid:after, .row:before, .row:after {
+            display: table;
+            content: " ";
+        }
+
+        .container-fluid:after, .row:after {
+            clear: both;
+        }
+    </style>
+    <style>
+        @font-face {
+            font-family: 'FontAwesome';
+            src: url('//netdna.bootstrapcdn.com/font-awesome/4.5.0/fonts/fontawesome-webfont.eot?v=4.5.0');
+            src: url('//netdna.bootstrapcdn.com/font-awesome/4.5.0/fonts/fontawesome-webfont.eot?#iefix&v=4.5.0') format('embedded-opentype'), url('//netdna.bootstrapcdn.com/font-awesome/4.5.0/fonts/fontawesome-webfont.woff?v=4.5.0') format('woff'), url('//netdna.bootstrapcdn.com/font-awesome/4.5.0/fonts/fontawesome-webfont.ttf?v=4.5.0') format('truetype'), url('//netdna.bootstrapcdn.com/font-awesome/4.5.0/fonts/fontawesome-webfont.svg?v=4.5.0#fontawesomeregular') format('svg');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .fa {
+            display: inline-block;
+            font-family: FontAwesome;
+            font-style: normal;
+            font-weight: normal;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .fa-github-alt:before {
+            content: "\f113";
+        }
+        .fa-info-circle:before {
+          content: "\f05a";
+        }
+        .fa-file-code-o:before {
+          content: "\f1c9";
+        }
+    </style>
+    <style>
+        html {
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-weight: 300;
+            background-color: #2D2D29;
+            color: #FFFFFF;
+            font-size: 16px;
+            height: 100%;
+            width: 100%;
+        }
+
+        .content-panel {
+            background-color: #3B3B35;
+            padding: 30px 20px;
+            margin-top: 20px;
+            box-shadow: 0 0 0 0, 0 6px 12px rgba(0, 0, 0, 0.2);
+            border-bottom: 5px solid #3CA2A2;
+        }
+
+        .index {
+            height: 100%;
+            max-height: 100%;
+            width: 100%;
+            padding: 0;
+        }
+
+        @media (min-width: 768px) {
+            .index {
+                width: 700px;
+                max-width: 700px;
+            }
+        }
+
+        .index .row {
+            height: 100%;
+            max-height: 100%;
+            margin-top: 60px;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .header {
+            font-size: 32px;
+            text-align: center;
+            margin-top: 20px;
+            margin-left: -0%;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .header {
+                font-size: 62px;
+                margin-left: -10%;
+                width: 120%;
+            }
+        }
+
+        .index .header {
+            margin-top: 10px;
+            margin-left: 0;
+            margin-bottom: 0;
+            font-size: 32px;
+            width: 100%;
+        }
+
+        @media (min-width: 1200px) {
+            .index .header {
+                margin-left: -10%;
+                width: 120%;
+            }
+        }
+
+        .index .author-header {
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 0;
+            padding-top: 15px;
+            font-size: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .index .author-header {
+                font-size: 52px;
+                margin-top: 0;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .index .author-header {
+                font-size: 60px;
+                margin-top: -20px;
+            }
+        }
+
+        .index .author-text {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+            .index .author-text b {
+                font-size: 32px;
+            }
+
+        .links {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+            .links i {
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+
+        @media (min-width: 768px) {
+            .links i {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+
+        .links .fa {
+            -webkit-transition: 0.3s;
+            -moz-transition: 0.3s;
+            -o-transition: 0.3s;
+            transition: 0.3s;
+        }
+
+
+        .links .fa-info-circle:hover {
+            color: #2b77b1;
+        }
+
+        .links .fa-file-code:hover {
+            color: #c95644;
+        }
+
+        .links .fa-github-alt:hover {
+            color: #f6c2a4;
+        }
+
+
+        .index .links {
+            font-size: 2em;
+        }
+
+            .index .links a, .index .links a:active {
+                color: #FFFFFF;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="page-content">
+        <div class="wrap">
+            <div class="container-fluid index">
+                <div class="row">
+                    <div class="col-md-12 main content-panel">
+
+                        <h1 class="header author-header" itemprop="headline">Enttoi API</h1>
+
+                        <div class="author-text">
+                            Here are some useful links to get started:
+                        </div>
+
+                        <p class="links">
+                            <a href="https://enttoi.github.io/"><i class="fa fa-github-alt"></i></a>
+                            <a href="/swagger/ui/index"><i class="fa fa-info-circle"></i></a>
+                            <a href="/swagger/docs/v1"><i class="fa fa-file-code-o"></i></a>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

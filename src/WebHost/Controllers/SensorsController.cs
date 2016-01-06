@@ -4,9 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace WebHost.Controllers
 {
+    /// <summary>
+    /// Sensors API
+    /// </summary>
     public class SensorsController : ApiController
     {
         private readonly IDocumentsService _documentsService;
@@ -21,7 +25,13 @@ namespace WebHost.Controllers
             _tableService = tableService;
         }
 
+        /// <summary>
+        /// Gets the sensors with their most recent state.
+        /// </summary>
+        /// <param name="clientId">The client identifier.</param>
+        /// <returns>List of sensors</returns>
         [Route("sensors/{clientId:guid}")]
+        [ResponseType(typeof(IList<SensorStatePersisted>))]
         public async Task<IHttpActionResult> GetSensors(Guid clientId)
         {
             var client = _documentsService.GetClient(clientId);
