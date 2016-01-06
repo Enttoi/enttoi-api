@@ -15,6 +15,7 @@ This is a server side component for web interface. This is an OWIN based applica
   ```
   /clients/all
   /clients/{client id}
+  /sensors/{client id}
   ```
   This will return a medat data of clients and their sensors
 
