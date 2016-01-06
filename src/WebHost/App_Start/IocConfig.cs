@@ -54,6 +54,9 @@ namespace WebHost
 
             var container = builder.Build();
 
+            // resolving in OWIN middleware 
+            app.UseAutofacMiddleware(container);
+
             // web api registration
             httpConfigurations.DependencyResolver = new AutofacWebApiDependencyResolver(container);
 
