@@ -3,7 +3,7 @@
     public class Sensor
     {
         /// <summary>
-        /// Unique within client identifier of the sensor.
+        /// Unique identifier within client of the sensor.
         /// </summary>
         /// <value>
         /// The sensor identifier.

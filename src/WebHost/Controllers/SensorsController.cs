@@ -30,6 +30,7 @@ namespace WebHost.Controllers
         /// </summary>
         /// <param name="clientId">The client identifier.</param>
         /// <returns>List of sensors</returns>
+        /// <response code="404">Client was not found for provided ID</response>
         [Route("sensors/{clientId:guid}")]
         [ResponseType(typeof(IList<SensorStatePersisted>))]
         public async Task<IHttpActionResult> GetSensors(Guid clientId)

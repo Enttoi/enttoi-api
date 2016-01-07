@@ -22,7 +22,7 @@ namespace WebHost.Controllers
         }
 
         /// <summary>
-        /// Gets the clients.
+        /// Gets the list of all registered clients.
         /// </summary>
         /// <param name="onlineOnly">if set to <c>true</c> retrieves only client whos status is 'online'.</param>
         /// <returns>List of clients</returns>
@@ -33,10 +33,11 @@ namespace WebHost.Controllers
         }
 
         /// <summary>
-        /// Gets the client.
+        /// Gets specific client by its ID.
         /// </summary>
         /// <param name="clientId">The client identifier.</param>
         /// <returns>Single client</returns>
+        /// <response code="404">Client was not found for provided ID</response>
         [Route("clients/{clientId:guid}")]
         [ResponseType(typeof(Client))]
         public IHttpActionResult GetClient(Guid clientId)
