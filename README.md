@@ -1,8 +1,8 @@
-# Enttoi API for web client
+# Enttoi API
 
 [![Build status](https://ci.appveyor.com/api/projects/status/mi0xgwxrpo7kburj/branch/master?svg=true)](https://ci.appveyor.com/project/jenyayel/enttoi-api-dotnet/branch/master)
 
-Enttoit API for retreiving current persisted state of clients and their sensors, and [SignalR](https://github.com/SignalR/SignalR) for pushing real-time updates via websocket. 
+Enttoit API for retreiving current persisted state of clients and their sensors, and [SignalR](https://github.com/SignalR/SignalR) for pushing real-time updates via websocket. To be used by different clients - web, hybrid and native applications.
 
 ## Running in dev
 
