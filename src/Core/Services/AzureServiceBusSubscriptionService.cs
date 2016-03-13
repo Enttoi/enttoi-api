@@ -15,6 +15,7 @@ namespace Core.Services
         private readonly string[] TOPICS = new[] { "sensor-state-changed", "client-state-changed" };
         private const string SUBSCRIPTION_PREFIX = "api";
 
+        private readonly TimeSpan TOPIC_MESSAGE_TTL = TimeSpan.FromMinutes(5);
         private const int RETRY_COUNT = 3;
         private readonly TimeSpan RETRY_INTERVAL = TimeSpan.FromMilliseconds(500);
 
@@ -37,7 +38,11 @@ namespace Core.Services
             {
                 var subscriptionName = getSubscriptionName(topic);
                 if (!namespaceManager.SubscriptionExists(topic, subscriptionName))
-                    namespaceManager.CreateSubscription(topic, subscriptionName);
+                {
+                    var description = new SubscriptionDescription(topic, subscriptionName);
+                    description.DefaultMessageTimeToLive = TOPIC_MESSAGE_TTL;
+                    namespaceManager.CreateSubscription(description);
+                }
                 _clients.Add(topic, SubscriptionClient.CreateFromConnectionString(
                     _connectionString,
                     topic,
