@@ -13,7 +13,7 @@ namespace Core.Services
     public class AzureServiceBusSubscriptionService : ISubscriptionService, IDisposable
     {
         private readonly string[] TOPICS = new[] { "sensor-state-changed", "client-state-changed" };
-        private const string SUBSCRIPTION_PREFIX = "AllMessages";
+        private const string SUBSCRIPTION_PREFIX = "api";
 
         private const int RETRY_COUNT = 3;
         private readonly TimeSpan RETRY_INTERVAL = TimeSpan.FromMilliseconds(500);
