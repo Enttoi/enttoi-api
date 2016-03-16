@@ -178,6 +178,7 @@
     <Compile Include="App_Start\SubscriptionsConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="Controllers\ClientsController.cs" />
+    <Compile Include="Controllers\StatsController.cs" />
     <Compile Include="Controllers\SensorsController.cs" />
     <Compile Include="Hubs\CommonHub.cs" />
     <Compile Include="Logger\TraceLogger.cs" />
