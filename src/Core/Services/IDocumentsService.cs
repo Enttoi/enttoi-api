@@ -9,5 +9,7 @@ namespace Core.Services
         IList<Client> GetClients(bool onlineOnly = false);
 
         Client GetClient(Guid clientId);
+
+        StatsSensorStates GetHourlyStats(Guid clientId, int sensorId, DateTime from, DateTime to);
     }
 }

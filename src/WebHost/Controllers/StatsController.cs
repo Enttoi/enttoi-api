@@ -41,12 +41,7 @@ namespace WebHost.Controllers
             if (client == null || !client.Sensors.Any(s => s.sensorId == sensorId))
                 return NotFound();
 
-            var ran = new Random();
-            return Ok(new StatsSensorStates() {
-                { -1, ran.Next(100) + 1 },
-                { 0, ran.Next(100) + 1 },
-                { 1, ran.Next(100) + 1 }
-            });
+            return Ok(_documentsService.GetHourlyStats(clientId, sensorId, from, to));
         }
     }
 }
