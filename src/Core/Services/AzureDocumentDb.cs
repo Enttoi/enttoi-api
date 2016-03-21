@@ -110,7 +110,7 @@ namespace Core.Services
             else
                 return result.Aggregate((a, b) =>
                   {
-                      foreach (var stateKey in a.States.Keys)
+                      foreach (var stateKey in a.States.Keys.ToList())
                           a.States[stateKey] += b.States[stateKey];
                       return a;
                   }).States;
