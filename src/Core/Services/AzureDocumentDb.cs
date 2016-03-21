@@ -101,12 +101,7 @@ namespace Core.Services
                 .ToList();
 
             if (result.Count == 0)
-                // TODO: states should not be hardcoded in API level
-                return new StatsSensorStates {
-                    { -1, 0 },
-                    { 0, 0 },
-                    { 1, 0 }
-                };
+                return null;
             else
                 return result.Aggregate((a, b) =>
                   {

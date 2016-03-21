@@ -31,6 +31,7 @@ namespace WebHost.Controllers
         /// <param name="from">Returns statistics from date.</param>
         /// <param name="to">Returns statistics until date.</param>
         /// <returns>States and their time sensor remained in</returns>
+        /// <response code="400">No statistics found for specified input</response>
         /// <response code="404">Client or sensor was not found for provided IDs</response>
         [Route("stats/sensor-state/{clientId:guid}/{sensorId:int}")]
         [ResponseType(typeof(StatsSensorStates))]
@@ -41,7 +42,12 @@ namespace WebHost.Controllers
             if (client == null || !client.Sensors.Any(s => s.sensorId == sensorId))
                 return NotFound();
 
-            return Ok(_documentsService.GetHourlyStats(clientId, sensorId, from, to));
+            var result = _documentsService.GetHourlyStats(clientId, sensorId, from, to);
+
+            if (result != null)
+                return Ok(result);
+            else
+                return BadRequest();
         }
     }
 }
