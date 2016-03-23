@@ -47,7 +47,7 @@ namespace WebHost.Controllers
             if (result != null)
                 return Ok(result);
             else
-                return BadRequest();
+                return Ok(default(StatsSensorStates));
         }
     }
 }
