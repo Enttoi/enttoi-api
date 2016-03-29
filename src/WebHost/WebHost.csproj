@@ -180,9 +180,11 @@
     <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Controllers\StatsController.cs" />
     <Compile Include="Controllers\SensorsController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Hubs\CommonHub.cs" />
     <Compile Include="Logger\TraceLogger.cs" />
     <Compile Include="Models\ClientUpdate.cs" />
+    <Compile Include="Models\OnlineUsers.cs" />
     <Compile Include="Models\SensorClientUpdate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
