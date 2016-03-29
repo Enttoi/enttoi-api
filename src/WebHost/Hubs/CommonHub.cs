@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Core.Services;
 using Microsoft.AspNet.SignalR;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebHost.Models;
@@ -11,7 +12,8 @@ namespace WebHost.Hubs
     {
         private readonly ILifetimeScope _hubLifetimeScope;
         private readonly ITableService _tableService;
-        private readonly IDocumentsService _documentService;        
+        private readonly IDocumentsService _documentService;
+        private readonly IDistributedCounter _counterService;
 
         public CommonHub(ILifetimeScope lifetimeScope)
         {
@@ -21,38 +23,22 @@ namespace WebHost.Hubs
             // Resolve dependencies from the hub lifetime scope
             _documentService = _hubLifetimeScope.Resolve<IDocumentsService>(); // singleton
             _tableService = _hubLifetimeScope.Resolve<ITableService>(); // singleton
+            _counterService = _hubLifetimeScope.Resolve<IDistributedCounter>(); // singleton
         }
 
-        /// <summary>
-        /// Requests the initial state. Calling this method will trigger to push current/initial state 
-        /// to connected to hub users through the "channels" (hub events) which are used to send a regular updates.
-        /// This way the hub users only subscribe to updates.
-        /// </summary>
-        /// <returns></returns>
-        public async Task RequestInitialState()
+        public override async Task OnConnected()
         {
-            var onlineClients = _documentService.GetClients(true);
-            var states = await _tableService.GetSensorsStateAsync(onlineClients);
-
-            await Task.WhenAll(
-                states.Select(async state => await Clients.Client(Context.ConnectionId).sensorStatePush(new SensorClientUpdate
-                {
-                    clientId = state.ClientId,
-                    sensorId = state.sensorId,
-                    sensorType = state.sensorType,
-                    newState = state.State,
-                    timestamp = state.StateUpdatedOn
-                })));
+            await requestInitialState();
         }
 
-        public override Task OnConnected()
+        public override async Task OnReconnected()
         {
-            return base.OnConnected();
+            await requestInitialState();
         }
 
-        public override Task OnDisconnected(bool stopCalled)
+        public override async Task OnDisconnected(bool stopCalled)
         {
-            return base.OnDisconnected(stopCalled);
+            await _counterService.Subtruct(Context.ConnectionId);
         }
 
         protected override void Dispose(bool disposing)
@@ -61,6 +47,31 @@ namespace WebHost.Hubs
                 _hubLifetimeScope.Dispose();
 
             base.Dispose(disposing);
+        }
+
+        /// <summary>
+        /// Requests the initial state. Calling this method will trigger to push current/initial state 
+        /// to connected to hub users through the "channels" (hub events) which are used to send a regular updates.
+        /// This way the hub users only subscribe to updates.
+        /// </summary>
+        /// <returns></returns>
+        private async Task requestInitialState()
+        {
+            var onlineClients = _documentService.GetClients(true);
+            var states = await _tableService.GetSensorsStateAsync(onlineClients);
+            List<Task> tasks = new List<Task>();
+
+            tasks.AddRange(states.Select(async state => await Clients.Client(Context.ConnectionId).sensorStatePush(new SensorClientUpdate
+            {
+                clientId = state.ClientId,
+                sensorId = state.sensorId,
+                sensorType = state.sensorType,
+                newState = state.State,
+                timestamp = state.StateUpdatedOn
+            })));
+            tasks.Add(_counterService.Add(Context.ConnectionId));
+
+            await Task.WhenAll(tasks);
         }
     }
 }

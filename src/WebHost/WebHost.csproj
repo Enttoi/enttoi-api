@@ -175,7 +175,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\IocConfig.cs" />
-    <Compile Include="App_Start\SubscriptionsConfig.cs" />
+    <Compile Include="App_Start\PushToClientConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Controllers\StatsController.cs" />

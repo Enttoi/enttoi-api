@@ -7,14 +7,15 @@ using WebHost.Models;
 
 namespace WebHost
 {
-    internal static class SubscriptionsConfig
+    internal static class PushToClientConfig
     {
         public static void Register(IContainer container, IDependencyResolver resolver)
         {
-            var service = container.Resolve<ISubscriptionService>();
+            var serviceBusService = container.Resolve<ISubscriptionService>();
+            var counterService = container.Resolve<IDistributedCounter>();
             var hub = resolver.Resolve<IConnectionManager>().GetHubContext<CommonHub>();
 
-            service.OnSensorStateChangedAsync(async (state) =>
+            serviceBusService.OnSensorStateChangedAsync(async (state) =>
             {
                 await hub.Clients.All.sensorStatePush(new SensorClientUpdate
                 {
@@ -26,7 +27,7 @@ namespace WebHost
                 });
             });
 
-            service.OnClientStateChangedAsync(async (state) =>
+            serviceBusService.OnClientStateChangedAsync(async (state) =>
             {
                 await hub.Clients.All.clientStatePush(new ClientUpdate
                 {
@@ -34,6 +35,10 @@ namespace WebHost
                     newState = state.NewState,
                     timestamp = state.Timestamp
                 });
+            });
+
+            counterService.OnCounterChangedAsync(async (counter) => {
+                await hub.Clients.All.onlineUsersPush(counter);
             });
         }
     }

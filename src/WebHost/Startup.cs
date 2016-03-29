@@ -42,8 +42,8 @@ namespace WebHost
                 .ContractResolver = new CamelCasePropertyNamesContractResolver();
             app.UseWebApi(httpConfigurations);
 
-            // configure notifications from service bus to hub
-            SubscriptionsConfig.Register(container, srConfig.Resolver);
+            // configure notifications sent from backend to client
+            PushToClientConfig.Register(container, srConfig.Resolver);
         }
     }
 }
