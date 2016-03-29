@@ -32,6 +32,11 @@ namespace WebHost
                 .SingleInstance();
 
             builder
+                .RegisterType<InMemoryCounter>()
+                .As<IDistributedCounter>()
+                .SingleInstance();
+
+            builder
                 .RegisterType<AzureDocumentDb>()
                 .As<IDocumentsService>()
                 .SingleInstance()

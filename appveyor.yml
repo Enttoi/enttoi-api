@@ -10,7 +10,7 @@ build:
   publish_wap: true
   parallel: true
   verbosity: minimal
-test: off
+test: on
 artifacts:
 - path: WebHost\bin\WebHost.zip
   name: web-deploy-package

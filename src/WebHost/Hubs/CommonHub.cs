@@ -23,6 +23,12 @@ namespace WebHost.Hubs
             _tableService = _hubLifetimeScope.Resolve<ITableService>(); // singleton
         }
 
+        /// <summary>
+        /// Requests the initial state. Calling this method will trigger to push current/initial state 
+        /// to connected to hub users through the "channels" (hub events) which are used to send a regular updates.
+        /// This way the hub users only subscribe to updates.
+        /// </summary>
+        /// <returns></returns>
         public async Task RequestInitialState()
         {
             var onlineClients = _documentService.GetClients(true);
@@ -37,6 +43,16 @@ namespace WebHost.Hubs
                     newState = state.State,
                     timestamp = state.StateUpdatedOn
                 })));
+        }
+
+        public override Task OnConnected()
+        {
+            return base.OnConnected();
+        }
+
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            return base.OnDisconnected(stopCalled);
         }
 
         protected override void Dispose(bool disposing)

@@ -103,7 +103,9 @@
     <Compile Include="Services\AzureDocumentDb.cs" />
     <Compile Include="Services\AzureServiceBusSubscriptionService.cs" />
     <Compile Include="Services\AzureTableStorageService.cs" />
+    <Compile Include="Services\IDistributedCounter.cs" />
     <Compile Include="Services\IDocumentsService.cs" />
+    <Compile Include="Services\InMemoryCounter.cs" />
     <Compile Include="Services\ISubscriptionService.cs" />
     <Compile Include="Services\ITableService.cs" />
   </ItemGroup>
