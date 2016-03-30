@@ -180,6 +180,7 @@
     <Compile Include="Controllers\ClientsController.cs" />
     <Compile Include="Controllers\StatsController.cs" />
     <Compile Include="Controllers\SensorsController.cs" />
+    <Compile Include="Controllers\TagsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Hubs\CommonHub.cs" />
     <Compile Include="Logger\TraceLogger.cs" />

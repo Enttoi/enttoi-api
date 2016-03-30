@@ -60,6 +60,27 @@ namespace Core.Services
                 .ToList();
         }
 
+        public IList<Client> GetClientsByTag(string tagName)
+        {
+            if (String.IsNullOrEmpty(tagName)) throw new ArgumentNullException(nameof(tagName));
+
+            var _query = new SqlQuerySpec()
+            {
+                QueryText =
+                    "SELECT VALUE c " +
+                    "FROM Clients c " +
+                    "JOIN t IN c.tags " +
+                    "WHERE t = @tagName",
+                Parameters = new SqlParameterCollection {
+                    new SqlParameter("@tagName", tagName)
+                }
+            };
+
+            return _client
+                .CreateDocumentQuery<Client>(_clientCollectionLink, _query)
+                .ToList();
+        }
+
         public Client GetClient(Guid clientId)
         {
             if (clientId == Guid.Empty) throw new ArgumentOutOfRangeException(nameof(clientId));
@@ -82,12 +103,12 @@ namespace Core.Services
         {
             var _query = new SqlQuerySpec()
             {
-                QueryText = String.Format(
+                QueryText =
                     $"SELECT s.states FROM s " +
                     "WHERE s.clientId = @clientId " +
                     "AND s.sensorId = @sensorId " +
                     "AND s.timeStampHourResolution >= @from " +
-                    "AND s.timeStampHourResolution <= @to"),
+                    "AND s.timeStampHourResolution <= @to",
                 Parameters = new SqlParameterCollection {
                     new SqlParameter("@clientId", clientId),
                     new SqlParameter("@sensorId", sensorId),
@@ -111,7 +132,21 @@ namespace Core.Services
                   }).States;
         }
 
+        public IList<string> GetTags()
+        {
+            var _query = new SqlQuerySpec()
+            {
+                QueryText = String.Format(
+                    "SELECT * FROM c IN Clients.tags")
+            };
 
+            return _client
+                .CreateDocumentQuery<string>(_clientCollectionLink, _query)
+                .ToList()
+                .Distinct()
+                .OrderBy(t => t)
+                .ToList();
+        }
 
         public void Dispose()
         {
