@@ -49,5 +49,28 @@ namespace WebHost.Controllers
 
             return Ok(client);
         }
+
+        /// <summary>
+        /// Gets a list of all tags
+        /// </summary>
+        /// <returns>List of tags</returns>
+        [Route("clients/tags")]
+        [ResponseType(typeof(IEnumerable<string>))]
+        public IHttpActionResult GetTags()
+        {
+            return Ok(_documentsService.GetTags());
+        }
+
+        /// <summary>
+        /// Gets the list of clients for specified tag.
+        /// </summary>
+        /// <param name="tagName">The name of the tag.</param>
+        /// <returns>List of clients</returns>
+        [Route("clients/tags/{tagName}")]
+        public IEnumerable<Client> GetClients(string tagName)
+        {
+            return _documentsService.GetClientsByTag(tagName);
+        }
+
     }
 }

@@ -11,5 +11,9 @@ namespace Core.Services
         Client GetClient(Guid clientId);
 
         StatsSensorStates GetHourlyStats(Guid clientId, int sensorId, DateTime from, DateTime to);
+
+        IList<string> GetTags();
+
+        IList<Client> GetClientsByTag(string tagName);
     }
 }
