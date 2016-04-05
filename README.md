@@ -13,12 +13,11 @@ Enttoit API for retreiving current persisted state of clients and their sensors,
 2. Configure environment variables located in Startup.cs
 3. REST API comes with [swagger](http://swagger.io/) UI at `/swagger/ui/index` 
 4. To get initial state and updates of sensors via websocket:
-  * Connect to SignalR at ```/signalr```
   * Create proxy ```CommonHub```
-  * Subscribe to event ```sensorStatePush```
-  * Execute ```RequestInitialState``` method
-
+  * Subscribe to event ```sensorStatePush``` (before connecting to proxy)
 5. To receive notification on entire client going offline or online:
-  * Subscribe to event ```clientStatePush```
+  * Subscribe to event ```clientStatePush``` (before connecting to proxy)
+6. To receive a number of connected users
+  * Subscribe to event ```onlineUsersPush``` (before connecting to proxy)
 
 
